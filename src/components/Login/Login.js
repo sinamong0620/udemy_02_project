@@ -28,10 +28,6 @@ const passwordReducer = (state, action) => {
   return { value: "", isValid: false };
 };
 const Login = (props) => {
-  // const [enteredEmail, setEnteredEmail] = useState("");
-  // const [emailIsValid, setEmailIsValid] = useState();
-  // const [enteredPassword, setEnteredPassword] = useState("");
-  // const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
   //useReducer 함수의 첫번째 인자는 함수를 취한다.
@@ -43,30 +39,33 @@ const Login = (props) => {
     value: "",
     isValid: undefined,
   });
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
 
-  //   return () => {
-  //     console.log("클린업 함수");
-  //     clearTimeout(identifier);
-  //   }; //이것은 클린업 프로세스이다. 실행되기 전에 이 클린업 함수가 실행이 된다. 처음 실행되는 때를 제외하고. 그리고 컴포넌트가 제거되기 전에 실행된다.
-  //   //첫번째 사이드이펙트 함수가 실행되기 전에는 실행되지 않는다.
-  // }, [setFormIsValid, enteredEmail, enteredPassword]);
+  //객체 디스트럭처링 => 객체의 특정 속성을 추출하는 것
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+  //이 useEffect는 다른 state를 기준으로 state를 업데이트하는 괜찮은 방법이다. 왜냐면 useEffect가 있으니까 이것은 반드시 실행될 것이다.
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      setFormIsValid(emailIsValid && passwordIsValid);
+    }, 500);
+
+    return () => {
+      console.log("클린업 함수");
+      clearTimeout(identifier);
+    }; //이것은 클린업 프로세스이다. 실행되기 전에 이 클린업 함수가 실행이 된다. 처음 실행되는 때를 제외하고. 그리고 컴포넌트가 제거되기 전에 실행된다.
+    //첫번째 사이드이펙트 함수가 실행되기 전에는 실행되지 않는다.
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
+    // setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(emailState.isValid && event.target.value.trim().length > 6);
+    // setFormIsValid(emailState.isValid && event.target.value.trim().length > 6);
   };
 
   const validateEmailHandler = () => {
