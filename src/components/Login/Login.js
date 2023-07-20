@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../../context/auth-context";
 
 //emailReducer 함수는 컴포넌트 함수 내부에서 만들어진 어떤 데이터도 필요하지 않기 때문이다. 따라서 이 리듀서 함수는 컴포넌트 함수의 범위 밖에서 만들어 질 수 있다.
 //값과 유효성을 하나의 state로 결합하여 useReducer로 관리하는 것.
@@ -39,6 +40,8 @@ const Login = (props) => {
     value: "",
     isValid: undefined,
   });
+
+  const authCtx = useContext(AuthContext);
 
   //객체 디스트럭처링 => 객체의 특정 속성을 추출하는 것
   const { isValid: emailIsValid } = emailState;
@@ -82,7 +85,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
   };
 
   return (
